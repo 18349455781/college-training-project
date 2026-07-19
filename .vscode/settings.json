@@ -3,7 +3,7 @@
     "commands": [
       {
         "match": ".*",
-        "cmd": "\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" \"${workspaceFolder}/.vscode/auto-push.sh\""
+        "cmd": "cmd /c \"${workspaceFolder}\\.vscode\\auto-push.bat\""
       }
     ]
   }
