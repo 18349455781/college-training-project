@@ -1,9 +1,13 @@
 {
   "emeraldwalk.runonsave": {
+    "shell": "powershell.exe",
+    "autoClearConsole": false,
     "commands": [
       {
         "match": ".*",
-        "cmd": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}\\.vscode\\auto-push.ps1\""
+        "cmd": "& '${workspaceFolder}\\.vscode\\auto-push.ps1'",
+        "isAsync": true,
+        "autoShowOutputPanel": "always"
       }
     ]
   }
