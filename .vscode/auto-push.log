@@ -26,3 +26,14 @@ git : To github.com:18349455781/college-training-project.git
  2 files changed, 22 insertions(+), 1 deletion(-)
 2026-07-19 20:30:01 - Script triggered
 2026-07-19 20:30:01 - Changes detected, committing...
+[main f45849f] Auto: save changes 2026-07-19 20:30:01
+ 2 files changed, 5 insertions(+)
+git : To github.com:18349455781/college-training-project.git
+所在位置 C:\Users\33230\Desktop\实训项目\大二实训项目\大二实训Git项目\.vscode\auto-push.ps1:22 字符: 15
++ $pushResult = git push 2>&1
++               ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (To github.com:1...ing-project.git:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   cba7da1..f45849f  main -> main
+2026-07-19 20:30:06 - Done. Commit: [main f45849f] Auto: save changes 2026-07-19 20:30:01  2 files changed, 5 insertions(+), Push: To github.com:18349455781/college-training-project.git    cba7da1..f45849f  main -> main

@@ -1,14 +1,10 @@
 {
-  "emeraldwalk.runonsave": {
-    "shell": "powershell.exe",
-    "autoClearConsole": false,
-    "commands": [
-      {
-        "match": ".*",
-        "cmd": "& '${workspaceFolder}\\.vscode\\auto-push.ps1'",
-        "isAsync": true,
-        "autoShowOutputPanel": "always"
-      }
+  "triggerTaskOnSave.on": true,
+  "triggerTaskOnSave.tasks": {
+    "auto-push": [
+      "**/*"
     ]
-  }
+  },
+  "triggerTaskOnSave.restart": true,
+  "triggerTaskOnSave.showOutput": false
 }
