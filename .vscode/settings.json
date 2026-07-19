@@ -1,0 +1,10 @@
+{
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": ".*",
+        "cmd": "bash \"${workspaceFolder}\\.vscode\\auto-push.sh\""
+      }
+    ]
+  }
+}
