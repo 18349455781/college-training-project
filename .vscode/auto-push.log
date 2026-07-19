@@ -1,2 +1,24 @@
 ﻿2026-07-19 20:29:34 - Script triggered
 2026-07-19 20:29:34 - Changes detected, committing...
+git : warning: in the working copy of '.vscode/settings.json', LF will be replaced by CRLF the next time Git touches it
+所在位置 C:\Users\33230\Desktop\实训项目\大二实训项目\大二实训Git项目\.vscode\auto-push.ps1:19 字符: 1
++ git add -A 2>&1 | Out-File -Append $logFile -Encoding UTF8
++ ~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[main 6872bae] Auto: save changes 2026-07-19 20:29:35
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+ create mode 100644 .vscode/auto-push.log
+ delete mode 100644 Day2/1.py
+git : To github.com:18349455781/college-training-project.git
+所在位置 C:\Users\33230\Desktop\实训项目\大二实训项目\大二实训Git项目\.vscode\auto-push.ps1:22 字符: 15
++ $pushResult = git push 2>&1
++               ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (To github.com:1...ing-project.git:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   9d5b273..6872bae  main -> main
+2026-07-19 20:29:39 - Done. Commit: [main 6872bae] Auto: save changes 2026-07-19 20:29:35  4 files changed, 8 insertions(+), 2 deletions(-)  create mode 100644 .vscode/auto-push.log  delete mode 100644 Day2/1.py, Push: To github.com:18349455781/college-training-project.git    9d5b273..6872bae  main -> main
+2026-07-19 20:29:40 - Script triggered
+2026-07-19 20:29:41 - Changes detected, committing...
