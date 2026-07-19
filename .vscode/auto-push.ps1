@@ -1,6 +1,6 @@
-param($workspaceFolder)
-
-Set-Location $workspaceFolder
+# Auto add, commit, and push on save
+$repoRoot = Split-Path -Parent $PSScriptRoot
+Set-Location $repoRoot
 
 # Check for changes
 $status = git status --porcelain

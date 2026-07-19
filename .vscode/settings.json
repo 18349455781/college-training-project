@@ -3,7 +3,7 @@
     "commands": [
       {
         "match": ".*",
-        "cmd": "powershell -NoProfile -Command \"Set-Location 'C:\\Users\\33230\\Desktop\\实训项目\\大二实训项目\\大二实训Git项目'; $s=git status --porcelain; if($s){git add -A; git commit -m 'Auto: save changes'; git push}\""
+        "cmd": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${workspaceFolder}\\.vscode\\auto-push.ps1\""
       }
     ]
   }
