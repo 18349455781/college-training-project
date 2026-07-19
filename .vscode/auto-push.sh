@@ -1,7 +1,8 @@
 #!/bin/bash
 # Auto add, commit, and push on save
 
-cd "C:/Users/33230/Desktop/实训项目/大二实训项目/大二实训Git项目"
+# Change to the repository root (parent of .vscode folder)
+cd "$(dirname "$0")/.."
 
 # Check if there are any changes
 if [[ -z $(git status --porcelain) ]]; then
