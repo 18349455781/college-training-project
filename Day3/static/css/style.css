@@ -1,0 +1,303 @@
+/* 全局 reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f5f7fa;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* 导航栏 */
+.navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-brand {
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.nav-welcome {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* 主容器 */
+.container {
+    max-width: 700px;
+    margin: 2.5rem auto;
+    padding: 0 1rem;
+}
+
+/* 卡片 */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.card h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+.card h3 {
+    margin-bottom: 1rem;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+/* 登录卡片 */
+.login-card {
+    max-width: 420px;
+    margin: 2rem auto;
+}
+
+/* 表单 */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* 表单底部链接 */
+.form-footer {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.form-footer a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* 按钮 */
+.btn {
+    display: inline-block;
+    padding: 0.65rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: #fff;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.btn-logout {
+    background: #e74c3c;
+    color: #fff;
+    margin-top: 1rem;
+}
+
+.btn-search {
+    background: #27ae60;
+    color: #fff;
+    padding: 0.65rem 1.8rem;
+    font-weight: 500;
+}
+
+/* 错误提示 */
+.error-message {
+    background: #ffe0e0;
+    color: #c0392b;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 成功提示 */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 用户信息表格 */
+.user-info {
+    margin: 1rem 0;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-table td,
+.info-table th {
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.info-table td:first-child {
+    color: #888;
+    width: 80px;
+    font-weight: 500;
+}
+
+.info-table th {
+    background: #f8f9fa;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* 角色标签 */
+.role-badge {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    background: #e8f0fe;
+    color: #667eea;
+    font-weight: 500;
+}
+
+/* 欢迎卡片 */
+.welcome-card {
+    text-align: center;
+}
+
+.welcome-card p {
+    color: #888;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-card .btn {
+    width: auto;
+    display: inline-block;
+}
+
+/* ===== Day3 新增：搜索功能样式 ===== */
+.search-section {
+    margin: 1.5rem 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.search-section h3 {
+    margin-bottom: 0.8rem;
+    color: #555;
+    font-size: 1.05rem;
+}
+
+.search-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.12);
+}
+
+.search-results {
+    margin-top: 1.2rem;
+}
+
+.search-results h4 {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+}
+
+.search-table {
+    margin-top: 0.4rem;
+}
+
+.no-result {
+    color: #999;
+    font-size: 0.9rem;
+    font-style: italic;
+    padding: 0.8rem 0;
+}

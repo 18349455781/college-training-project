@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Database files (auto-generated)
+data/*.db
+
+# Keep data directory in git
+!data/.gitkeep
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
