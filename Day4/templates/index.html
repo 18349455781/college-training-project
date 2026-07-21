@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 用户管理系统{% endblock %}
+
+{% block content %}
+{% if user %}
+<div class="card">
+    <h2>欢迎回来，{{ user.username }}！</h2>
+    <div class="user-info">
+        <h3>用户信息</h3>
+        <table class="info-table">
+            <tr>
+                <td>用户名</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td>邮箱</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>手机</td>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <td>角色</td>
+                <td><span class="role-badge">{{ user.role }}</span></td>
+            </tr>
+            <tr>
+                <td>余额</td>
+                <td>{{ user.balance }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Day4 新增：上传头像快捷入口 -->
+    <div class="quick-actions">
+        <a href="/upload" class="btn btn-upload">上传头像</a>
+    </div>
+
+    <!-- ===== Day3：搜索功能 ===== -->
+    <div class="search-section">
+        <h3>用户搜索</h3>
+        <form method="get" action="/search" class="search-form">
+            <div class="search-row">
+                <input type="text" name="keyword" placeholder="输入用户名或邮箱关键词搜索" value="{{ keyword or '' }}" class="search-input">
+                <button type="submit" class="btn btn-search">搜 索</button>
+            </div>
+        </form>
+
+        {% if keyword %}
+        <div class="search-results">
+            <h4>搜索 "{{ keyword }}" 的结果（共 {{ results|length }} 条）：</h4>
+            {% if results %}
+            <table class="info-table search-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>用户名</th>
+                        <th>邮箱</th>
+                        <th>手机</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.username }}</td>
+                        <td>{{ row.email }}</td>
+                        <td>{{ row.phone }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-result">无搜索结果</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if search_error %}
+        <div class="error-message">{{ search_error }}</div>
+        {% endif %}
+    </div>
+    <!-- ===== 搜索功能结束 ===== -->
+
+    <a href="/logout" class="btn btn-logout">退出登录</a>
+</div>
+{% else %}
+<div class="card welcome-card">
+    <h2>欢迎来到用户管理系统</h2>
+    <p>请先登录以查看您的信息。</p>
+    <a href="/login" class="btn btn-primary">前往登录</a>
+</div>
+{% endif %}
+{% endblock %}

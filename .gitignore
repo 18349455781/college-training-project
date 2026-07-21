@@ -5,9 +5,15 @@ __pycache__/
 
 # Database files (auto-generated)
 data/*.db
+Day*/data/*.db
 
 # Keep data directory in git
 !data/.gitkeep
+!Day*/data/.gitkeep
+
+# Uploaded files (keep directory, ignore contents)
+Day*/static/uploads/*
+!Day*/static/uploads/.gitkeep
 
 # IDE
 .vscode/
