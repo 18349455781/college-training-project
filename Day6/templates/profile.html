@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}个人中心 - 用户管理系统{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>个人中心</h2>
+
+    {% if error %}
+    <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    {% if profile_user %}
+    <div class="user-info">
+        <h3>用户资料</h3>
+        <table class="info-table">
+            <tr>
+                <td>用户ID</td>
+                <td>{{ profile_user.id }}</td>
+            </tr>
+            <tr>
+                <td>用户名</td>
+                <td>{{ profile_user.username }}</td>
+            </tr>
+            <tr>
+                <td>邮箱</td>
+                <td>{{ profile_user.email }}</td>
+            </tr>
+            <tr>
+                <td>手机</td>
+                <td>{{ profile_user.phone }}</td>
+            </tr>
+            <tr>
+                <td>余额</td>
+                <td><strong>{{ profile_user.balance }}</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 充值表单 -->
+    <div class="search-section">
+        <h3>账户充值</h3>
+        <form method="post" action="/recharge" class="search-form">
+            <input type="hidden" name="user_id" value="{{ profile_user.id }}">
+            <div class="search-row">
+                <input type="number" name="amount" placeholder="请输入充值金额" class="search-input" min="0" required>
+                <button type="submit" class="btn btn-search">充 值</button>
+            </div>
+        </form>
+    </div>
+    {% elif not error %}
+    <h3>查看用户资料</h3>
+    <p style="color:#888; margin-bottom:1rem;">请输入要查看的用户ID</p>
+    <form method="get" action="/profile" class="search-form">
+        <div class="search-row">
+            <input type="number" name="user_id" placeholder="输入用户ID（如 1 或 2）" class="search-input" required>
+            <button type="submit" class="btn btn-search">查 看</button>
+        </div>
+    </form>
+    {% endif %}
+
+    <div class="form-footer">
+        <a href="/">返回首页</a>
+    </div>
+</div>
+{% endblock %}
