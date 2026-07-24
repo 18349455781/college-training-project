@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}个人中心 - 用户管理系统{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>个人中心</h2>
+
+    {% if error %}
+    <div class="error-message">{{ error }}</div>
+    {% endif %}
+
+    {% if profile_user %}
+    <div class="user-info">
+        <h3>用户资料</h3>
+        <table class="info-table">
+            <tr>
+                <td>用户ID</td>
+                <td>{{ profile_user.id }}</td>
+            </tr>
+            <tr>
+                <td>用户名</td>
+                <td>{{ profile_user.username }}</td>
+            </tr>
+            <tr>
+                <td>邮箱</td>
+                <td>{{ profile_user.email }}</td>
+            </tr>
+            <tr>
+                <td>手机</td>
+                <td>{{ profile_user.phone }}</td>
+            </tr>
+            <tr>
+                <td>余额</td>
+                <td><strong>{{ profile_user.balance }}</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 充值表单 -->
+    <div class="search-section">
+        <h3>账户充值</h3>
+        <form method="post" action="/recharge" class="search-form">
+            <input type="hidden" name="user_id" value="{{ profile_user.id }}">
+            <div class="search-row">
+                <input type="number" name="amount" placeholder="请输入充值金额" class="search-input" min="0" required>
+                <button type="submit" class="btn btn-search">充 值</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ===== Day7 新增：修改密码表单（存在CSRF漏洞） ===== -->
+    <div class="search-section">
+        <h3>修改密码</h3>
+        <p style="color:#888; font-size:0.85rem; margin-bottom:0.8rem;">修改用户 {{ profile_user.username }} 的登录密码</p>
+        <!--
+            漏洞说明：
+            1. 无 CSRF Token 验证
+            2. 不验证原密码
+            3. 不校验 session 用户与提交的 username 是否一致
+            4. 不验证 Referer 请求来源
+            5. 任何已登录用户都可以修改任何人的密码
+        -->
+        <form method="post" action="/change-password" class="search-form">
+            <!-- 使用隐藏字段传递目标用户名 -->
+            <input type="hidden" name="username" value="{{ profile_user.username }}">
+            <div class="form-group">
+                <label for="new_password">新密码</label>
+                <input type="password" id="new_password" name="new_password" placeholder="请输入新密码" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">确认密码</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="请再次输入新密码" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:auto;" onclick="return checkPasswordMatch()">修改密码</button>
+        </form>
+    </div>
+    <!-- ===== 修改密码表单结束 ===== -->
+
+    {% elif not error %}
+    <h3>查看用户资料</h3>
+    <p style="color:#888; margin-bottom:1rem;">请输入要查看的用户ID</p>
+    <form method="get" action="/profile" class="search-form">
+        <div class="search-row">
+            <input type="number" name="user_id" placeholder="输入用户ID（如 1 或 2）" class="search-input" required>
+            <button type="submit" class="btn btn-search">查 看</button>
+        </div>
+    </form>
+    {% endif %}
+
+    <div class="form-footer">
+        <a href="/">返回首页</a>
+    </div>
+</div>
+
+<script>
+// 前端确认两次密码一致（仅前端校验，不向服务器传递验证结果）
+function checkPasswordMatch() {
+    var newPwd = document.getElementById('new_password').value;
+    var confirmPwd = document.getElementById('confirm_password').value;
+    if (newPwd !== confirmPwd) {
+        alert('两次输入的密码不一致，请重新输入！');
+        return false;
+    }
+    return true;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 用户管理系统{% endblock %}
+
+{% block content %}
+{% if user %}
+<div class="card">
+    <h2>欢迎回来，{{ user.username }}！</h2>
+    <div class="user-info">
+        <h3>用户信息</h3>
+        <table class="info-table">
+            <tr>
+                <td>用户名</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <td>邮箱</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <td>手机</td>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <td>角色</td>
+                <td><span class="role-badge">{{ user.role }}</span></td>
+            </tr>
+            <tr>
+                <td>余额</td>
+                <td>{{ user.balance }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="quick-actions">
+        <a href="/upload" class="btn btn-upload">上传头像</a>
+        <a href="/profile?user_id=1" class="btn btn-primary" style="width:auto; margin-left:10px;">个人中心</a>
+        <a href="/page?name=help" class="btn btn-primary" style="width:auto; margin-left:10px; background: #17a2b8;">帮助中心</a>
+    </div>
+
+    <!-- 用户搜索 -->
+    <div class="search-section">
+        <h3>用户搜索</h3>
+        <form method="get" action="/search" class="search-form">
+            <div class="search-row">
+                <input type="text" name="keyword" placeholder="输入用户名或邮箱关键词搜索" value="{{ keyword or '' }}" class="search-input">
+                <button type="submit" class="btn btn-search">搜 索</button>
+            </div>
+        </form>
+
+        {% if keyword %}
+        <div class="search-results">
+            <h4>搜索 "{{ keyword }}" 的结果（共 {{ results|length }} 条）：</h4>
+            {% if results %}
+            <table class="info-table search-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>用户名</th>
+                        <th>邮箱</th>
+                        <th>手机</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.username }}</td>
+                        <td>{{ row.email }}</td>
+                        <td>{{ row.phone }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-result">无搜索结果</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if search_error %}
+        <div class="error-message">{{ search_error }}</div>
+        {% endif %}
+    </div>
+
+    <!-- ===== Day7 新增：留言板（存储型XSS漏洞演示） ===== -->
+    <div class="search-section">
+        <h3>留言板</h3>
+        <p style="color:#888; font-size:0.85rem; margin-bottom:0.8rem;">在此发表留言，所有用户都可以看到</p>
+
+        <form method="post" action="/post-comment" class="search-form">
+            <div class="search-row">
+                <input type="text" name="content" placeholder="请输入留言内容..." class="search-input" required>
+                <button type="submit" class="btn btn-search">发 表</button>
+            </div>
+        </form>
+
+        {% if comments %}
+        <div class="comment-list" style="margin-top:1.2rem;">
+            <h4>留言列表（共 {{ comments|length }} 条）</h4>
+            {% for comment in comments %}
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-author">{{ comment.username }}</span>
+                    <span class="comment-time">{{ comment.created_at }}</span>
+                </div>
+                <!-- 漏洞：使用 | safe 过滤器，用户输入的HTML/JS代码会被浏览器执行 -->
+                <div class="comment-content">{{ comment.content | safe }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-result" style="margin-top:1rem;">暂无留言，快来发表第一条留言吧！</p>
+        {% endif %}
+    </div>
+    <!-- ===== 留言板结束 ===== -->
+
+    <!-- ===== Day7 新增：反射型XSS回显区域 ===== -->
+    {% if echo_content %}
+    <div class="search-section">
+        <h3>反馈结果</h3>
+        <!-- 漏洞：使用 | safe 过滤器，用户输入的HTML/JS代码会被浏览器执行 -->
+        <div class="feedback-echo">
+            <p style="color:#888; font-size:0.85rem; margin-bottom:0.5rem;">您提交的反馈内容：</p>
+            <div class="comment-content" style="background:#fff3cd; padding:1rem; border-radius:6px; border-left:4px solid #ffc107;">
+                {{ echo_content | safe }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if search_query %}
+    <div class="search-section">
+        <h3>搜索结果</h3>
+        <p style="color:#888; font-size:0.85rem; margin-bottom:0.5rem;">您搜索的关键词：</p>
+        <!-- 漏洞：使用 | safe 过滤器，用户输入的HTML/JS代码会被浏览器执行 -->
+        <div class="comment-content" style="background:#fff3cd; padding:1rem; border-radius:6px; border-left:4px solid #ffc107;">
+            {{ search_query | safe }}
+        </div>
+        <p class="no-result">未找到相关内容</p>
+    </div>
+    {% endif %}
+    <!-- ===== 反射型XSS回显结束 ===== -->
+
+    <a href="/logout" class="btn btn-logout">退出登录</a>
+</div>
+{% else %}
+<div class="card welcome-card">
+    <h2>欢迎来到用户管理系统</h2>
+    <p>请先登录以查看您的信息。</p>
+    <a href="/login" class="btn btn-primary">前往登录</a>
+    <div style="margin-top:1rem;">
+        <a href="/page?name=help" class="btn btn-primary" style="width:auto; background: #17a2b8;">帮助中心</a>
+    </div>
+</div>
+{% endif %}
+
+<!-- 动态页面内容显示区域 -->
+{% if page_content %}
+<div class="card page-content-card">
+    {{ page_content | safe }}
+</div>
+{% endif %}
+{% endblock %}
